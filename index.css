@@ -37,6 +37,23 @@ header{
 .pokemon:hover{
     box-shadow: 10px 5px 5px black;
 }
+
+img{
+    animation: bounce 0.5s;
+            animation-direction: alternate;
+            animation-timing-function: cubic-bezier(.5, 0.05, 1, .5);
+            animation-iteration-count: infinite;
+}
+@keyframes bounce {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+    to {
+        transform: translate3d(0, 15px, 0);
+    }
+}
+
+
 .types{
     display: flex;
     margin: 0;
@@ -109,3 +126,38 @@ li{
 .rock{
     background-color: #B8A038;
 }
+footer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    height: 25px;
+    padding-top: 5px;
+    color: white;
+    background-color: #A8A878;
+  }
+  .footer-user{
+    margin: -2px 8px 0 0;
+    padding-left: 10px;
+    font-size: 12px;
+  }
+  .footer-nav{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-right: 10px;
+  }
+  a{
+    text-decoration: none;
+    color: white;
+  }
+  .footer-item{
+    margin: 0 20px;
+      padding: 0;
+      font-size: 12px;
+      line-height: 20px;
+      opacity: 0.6;
+  }
+  .footer-item:hover{
+    opacity: 1;
+  }
