@@ -1,63 +1,77 @@
-window.addEventListener("DOMContentLoaded", ()=>{
-    async function pokedex() {
-        let pokedex = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=151`);
-        let data = await pokedex.json();
-        //console.log(data)
-        data.results.forEach(pokemon => {
-            //console.log(pokemon);
-            let pokemonName = pokemon.name;
-            //console.log(pokemonName);
-            let pokemonUrl = pokemon.url;
-            //console.log(pokemonUrl);
-            grabPokemon(pokemonUrl)
-        });
-    }
+function fetchPokemon() {
+    fetch('https://pokeapi.co/api/v2/pokemon?limit=151')
+        .then(response => response.json())
+        .then(allpokemon => viewAllPokemon(allpokemon))
+}
+function viewAllPokemon(pokemonData) {
+    pokemonData.results.forEach(pokemon => {
+        fetchPokemonData(pokemon);
+    });
+};
 
-    async function grabPokemon(url){
-        const pokeDiv = document.createElement("div");
-        let pokename = document.createElement("h3");
-        let pokeNumber = document.createElement("p");
-        pokeNumber.setAttribute("class", "dex-number")
-        let pokeimage = document.createElement("img");
-        const pokeTypeDiv = document.createElement("ul");
-        let pokeType;
+function fetchPokemonData(pokemon) {
+    let url = pokemon.url;
+    //console.log(url)
+    fetch(url)
+        .then(response => response.json())
+        .then(poke =>{
+                let pokemonList = document.getElementById("pokemonList");
+                let pokemonBox = document.createElement("div");
+                pokemonBox.setAttribute("class", "pokemon");
 
-        pokeDiv.setAttribute("class", "pokemon")
-        pokeTypeDiv.setAttribute("class","type")
-        document.body.appendChild(pokeDiv)
-        pokeDiv.appendChild(pokename)
-        pokeDiv.appendChild(pokeNumber)
-        pokeDiv.appendChild(pokeimage)
-        pokeDiv.appendChild(pokeTypeDiv)
+                let pokemonName = document.createElement("h4");
+                pokemonName.setAttribute("id", poke.name);
+                pokemonName.innerText = poke.name;
+
+                let pokemonImage = document.createElement("img");
+                pokemonImage.src = poke.sprites.front_default;
 
 
-        let pokemon = await fetch(url);
-        let data = await pokemon.json();
-        //console.log(data);
-        pokeNumber.innerText = `#${data.id}`;
-        const pokeName = data.name;
-        pokename.innerText = pokeName;
-        pokeDiv.setAttribute("id", pokeName)
-        //console.log(pokeName);
-        pokeimage.src = data.sprites.front_default;
+                let pokemonNumber = document.createElement("p");
+                pokemonNumber.innerText = `#${poke.id}`;
+                let pokemonTypes = document.createElement("ul");
+                pokemonTypes.setAttribute("class", "types");
 
-        //console.log(data.types);
-        let arrayType = data.types;
-        for(let i = 0; i < arrayType.length; i++){
-            let type = arrayType[i].type.name;
-            //console.log(type);
-            pokeType = document.createElement("li");
-            pokeType.setAttribute("class",type)
-            pokeType.innerText = type;
-            pokeTypeDiv.appendChild(pokeType)
-        }
+                setType(poke.types, pokemonTypes);
 
+                pokemonBox.append(pokemonName);
+                pokemonBox.append(pokemonNumber);
+                pokemonBox.append(pokemonImage)
+                pokemonBox.append(pokemonTypes);
+                pokemonList.appendChild(pokemonBox);
+        })
+}
 
+// didnt work out as a function so had to implement within fetch/then promise
+// function pokemon(data) {
+//     let pokemonList = document.getElementById("pokemonList");
+//     let pokemonBox = document.createElement("div");
+//     pokemonBox.setAttribute("class", "pokemon");
+//     let pokemonName = document.createElement("h4");
+//     pokemonName.setAttribute("id", data.name);
+//     pokemonName.innerText = data.name;
+//     let pokemonNumber = document.createElement("p");
+//     pokemonNumber.innerText = `#${data.id}`;
+//     let pokemonTypes = document.createElement("ul");
+//     pokemonTypes.setAttribute("class", "types");
 
+//     setType(data.types, pokemonTypes);
 
-    }
+//     pokemonBox.append(pokemonName);
+//     pokemonBox.append(pokemonNumber);
+//     pokemonBox.append(pokemonTypes);
+//     pokemonList.appendChild(pokemonBox);
+// }
 
-    pokedex();
+function setType(types, list) {
+    types.forEach(type => {
+        let typeItem = document.createElement("li");
+        typeItem.innerText = type.type.name;
+        typeItem.setAttribute("class",type.type.name)
+        list.append(typeItem);
+    })
+}
 
-
+document.addEventListener("DOMContentLoaded",()=>{
+    fetchPokemon();
 })
