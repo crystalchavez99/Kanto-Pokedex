@@ -39,6 +39,7 @@ function fetchPokemonData(pokemon) {
                 pokemonBox.append(pokemonImage)
                 pokemonBox.append(pokemonTypes);
                 pokemonList.appendChild(pokemonBox);
+                pokemon.setAttribute("key", poke.id)
         })
 }
 
